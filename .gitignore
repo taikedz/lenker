@@ -1,3 +1,7 @@
 *.swp
 local_*
-*.venv
+
+
+# Added by cargo
+
+/target
