@@ -48,7 +48,7 @@ Paths that start with `./` will forcibly _only_ match on the path the currently-
 # subdir/subfile.txt
 #%include ./other.txt
 
-# This will search relative to subdir/subfile.txt _only_ , and ignore INCLUDE_PATH
+# This will search relative to subdir/subfile.txt _only_ , and ignore LENKER_PATH
 ```
 
 ## Blobs and regexes

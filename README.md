@@ -53,12 +53,12 @@ Several other features are available:
 * text/regex substitution with PCRE
 * environment variable substitution
 
-Example:
+Example of a Mardown file generted with code snippets, and using some string substitution:
 
 
-    Welcome to my blog post
+    # My Little Utility
 
-    #%include common/std-header.txt
+    #%include common/std-header.md
 
     The main file is so simple:
 
@@ -68,9 +68,13 @@ Example:
 
     We can try to change to python3 like so:
 
+    ```python3
     #%insert -S "r/^/    /,r/print(.+)/print(\1)/g"
+    ```
 
-    #%insert common/footer.txt
+    #%insert shoutouts/*.md
+
+    #%insert common/footer.md
 
 
 See [features.md](./features.md) for details.
