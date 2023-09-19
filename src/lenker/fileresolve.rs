@@ -36,18 +36,19 @@ fn resolve_line(line:&str) -> String {
     }
 }
 
-fn get_target(line:&str, path_list:&Vec<&str>) -> Result<String,String> { // FIXME - receive the resolution locations as argument
+fn get_target(line:&str, path_list:&Vec<&str>) -> Result<String,String> {
     let mut tokens = line.split(" ");
     tokens.next();
 
-    let path = tokens.collect::<Vec<&str>>().join(" ");
+    let path:String = tokens.collect::<Vec<&str>>().join(" ");
+    let path_str:&str = path.as_str();
 
     for base_path in path_list.iter() {
-        let resolved_path = vec![base_path, &path].join("/"); // FIXME use system path sep
+        let resolved_path = vec![base_path, path_str].join("/"); // FIXME use system path sep
         if Path::new(&resolved_path).exists() {
             // TODO - resolve against calling file
             // TODO - resolve against LENKER_PATH
-            return Ok(path);
+            return Ok(String::from(path));
         }
     }
     Err(format!("Could not find {}", &path))
