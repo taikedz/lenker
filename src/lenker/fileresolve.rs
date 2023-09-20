@@ -2,6 +2,12 @@ use std::path::Path;
 
 use super::io;
 
+struct Directive {
+    command: String,
+    file_path: String,
+    options: Vec<String>,
+}
+
 pub fn load(filename:&String) -> String {
     let lines:Vec<String>;
 
@@ -22,35 +28,58 @@ pub fn load(filename:&String) -> String {
 }
 
 fn resolve_line(line:&str) -> String {
-    if line.starts_with("#%insert") {
-        let target:String = get_target(line, &vec!["."]).unwrap();
-        load(&target)
+    match parse_directive(line) {
+        None => String::from(line),
+        Some(directive) => {
+            match directive.command.as_str() {
+                // FIXME don't use unwrap - if line not found, print linenum and file
+                "#%insert" => {
+                    let target:String = get_target(directive.file_path.as_str(), &vec!["."]).unwrap();
+                    load(&target)
+                },
 
-    } else if line.starts_with("#%include") {
-        let target:String = get_target(line, &vec!["."]).unwrap();
-        // TODO - check this has not been included before
-        load(&target)
+                "#%include" => {
+                    let target:String = get_target(directive.file_path.as_str(), &vec!["."]).unwrap();
+                    // TODO - check this has not been included before
+                    load(&target)
+                }
 
-    } else {
-        String::from(line)
+                _ => {
+                    // Found an invalid directive - return the line as-is
+                    //   this may still have been deliberate
+                    eprintln!("WARN: unresolvable directive '{}'", directive.command);
+                    String::from(line)
+                }
+            }
+        }
     }
 }
 
-fn get_target(line:&str, path_list:&Vec<&str>) -> Result<String,String> {
-    let mut tokens = line.split(" ");
-    tokens.next();
+fn parse_directive(line:&str) -> Option<Directive> {
+    if ! line.starts_with("#%") {
+        return None;
+    }
 
-    let path:String = tokens.collect::<Vec<&str>>().join(" ");
-    let path_str:&str = path.as_str();
+    let mut tokens = line.split(" ");
+    match tokens.next() {
+        None => None,
+        Some(command) => {
+            let path:String = tokens.collect::<Vec<&str>>().join(" ");
+            let options:Vec<String> = vec![];
+
+            Some(Directive { command: String::from(command), file_path: path, options: options })
+        }
+    }
+}
+
+fn get_target(path_str:&str, path_list:&Vec<&str>) -> Result<String,String> {
 
     for base_path in path_list.iter() {
         let resolved_path = vec![base_path, path_str].join("/"); // FIXME use system path sep
         if Path::new(&resolved_path).exists() {
-            // TODO - resolve against calling file
-            // TODO - resolve against LENKER_PATH
-            return Ok(String::from(path));
+            return Ok(String::from(path_str));
         }
     }
-    Err(format!("Could not find {}", &path))
+    Err(format!("Could not find '{}'", path_str))
 }
 
