@@ -17,42 +17,63 @@ pub fn load(filename:&String) -> String {
             // we must exit the match always with the same type
             eprintln!("{}", e);
             std::process::exit(1);
-        },
+        }
+
         Ok(res) => lines = res,
     };
 
     lines.iter()
-        .map(|line| resolve_line(line))
+        // using `map` assumes we always get a valid line resolution
+        // but if we want to handle (e.g.) non-found files properly:
+        // TODO use for loop, track line numbers, and print helpful error
+        .map(|line| resolve_line(line, filename))
         .collect::<Vec<String>>()
         .join("\n")
 }
 
-fn resolve_line(line:&str) -> String {
+fn resolve_line(line:&str, caller_file:&str) -> String {
+    let caller_file_p:&Path = Path::new(caller_file);
+    let caller_dir:&str;
+
+    match caller_file_p.parent() {
+        None => caller_dir = ".",
+        Some(p) => {
+            match p.to_str() {
+                None => caller_dir = ".",
+                Some(s) => caller_dir = s,
+            }
+        }
+    }
+
     match parse_directive(line) {
         None => String::from(line),
         Some(directive) => {
             match directive.command.as_str() {
                 // FIXME don't use unwrap - if line not found, print linenum and file
-                "#%insert" => {
-                    let target:String = get_target(directive.file_path.as_str(), &vec!["."]).unwrap();
-                    load(&target)
-                },
+                "#%insert" => { do_directive_insert(&directive, caller_dir) }
 
                 "#%include" => {
-                    let target:String = get_target(directive.file_path.as_str(), &vec!["."]).unwrap();
                     // TODO - check this has not been included before
-                    load(&target)
+                    // If not, perform insert
+                    do_directive_insert(&directive, caller_dir)
+                    // If so, do nothing
                 }
 
                 _ => {
                     // Found an invalid directive - return the line as-is
                     //   this may still have been deliberate
-                    eprintln!("WARN: unresolvable directive '{}'", directive.command);
+                    eprintln!("WARN: {}: unresolvable directive '{}'", caller_file, directive.command);
                     String::from(line)
                 }
             }
         }
     }
+}
+
+fn do_directive_insert(directive:&Directive, caller_dir:&str) -> String {
+    let target:String = get_target(directive.file_path.as_str(), &vec![caller_dir]).unwrap();
+    // TODO - Register file's absolute path, load it
+    load(&target)
 }
 
 fn parse_directive(line:&str) -> Option<Directive> {
@@ -63,6 +84,7 @@ fn parse_directive(line:&str) -> Option<Directive> {
     let mut tokens = line.split(" ");
     match tokens.next() {
         None => None,
+
         Some(command) => {
             let path:String = tokens.collect::<Vec<&str>>().join(" ");
             let options:Vec<String> = vec![];
@@ -77,7 +99,7 @@ fn get_target(path_str:&str, path_list:&Vec<&str>) -> Result<String,String> {
     for base_path in path_list.iter() {
         let resolved_path = vec![base_path, path_str].join("/"); // FIXME use system path sep
         if Path::new(&resolved_path).exists() {
-            return Ok(String::from(path_str));
+            return Ok(String::from(&resolved_path));
         }
     }
     Err(format!("Could not find '{}'", path_str))
