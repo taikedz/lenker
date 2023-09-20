@@ -1,5 +1,34 @@
 # Features
 
+(this is a list of intended features. see README.md for currently available features)
+
+## Example content
+
+
+Example of a Mardkown file generted with code snippets, and using some string substitution:
+
+
+    # My Little Utility
+
+    #%include common/std-header.md
+
+    The main file is so simple:
+
+    ```python
+    #%insert src/main.py
+    ```
+
+    We can try to change to python3 like so:
+
+    ```python3
+    #%insert -S "r/^/    /,r/print(.+)/print(\1)/g"
+    ```
+
+    #%insert shoutouts/*.md
+
+    #%insert common/footer.md
+
+
 ## Resolution path
 
 Specified files will be resolved along paths in `LENKER_PATH`, as well as the locations of the files. If unspecified, `LENKER_PATH=.` is default.
@@ -8,7 +37,7 @@ This will match along each path search location until a match is found. Once a m
 
 ## Matching files
 
-Every file encountered is "remembered" with its _absolute_ path.
+Every file encountered is "remembered" with its _canonical_ path.
 
 In a folder called `this_dir` , the following two files are the same, and will be `include`-ed once.
 
@@ -17,13 +46,9 @@ In a folder called `this_dir` , the following two files are the same, and will b
 #%include ../this_dir/file.txt
 ```
 
-The absolute path is retained where the file is found. To use the absolute paths of resolved symlinks, use
+The canonical path is retained where the file is found. This also resolves symlinks.
 
-```
-#%include -S file.txt
-```
-
-Note that if one inclusion resolves symlinks, and the next inclusion doesn't (and vice-versa), the absolute paths may be different and register as different files.
+Note that if the files are identical hardlinks, they will register as differnt files.
 
 ## Recursive inclusion
 

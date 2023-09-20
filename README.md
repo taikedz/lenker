@@ -1,6 +1,6 @@
 # Lenker
 
-A general-purpose file content inclusion tool. Can be used as a pre-processing step.
+A general-purpose text-file linker. Can be used as a pre-processing step.
 
 Write files, use `#%include PATH` (resolve once) or `#%insert PATH` (resolve every time) to add the file's content into that location.
 
@@ -46,36 +46,22 @@ Hello !
 Bye !
 ```
 
-Several other features are available:
+# Current
+
+Currently included directives:
+
+* `insert`
+* `include`
+* recursive inclusion processing
+* identification of files by canoninical path
+
+# Future
+
+Several other features are intended for the 1.0.0 version::
 
 * file blob inclusion, folder inclusion
-* recursive inclusion-processing
 * text/regex substitution with PCRE
 * environment variable substitution
-
-Example of a Mardown file generted with code snippets, and using some string substitution:
-
-
-    # My Little Utility
-
-    #%include common/std-header.md
-
-    The main file is so simple:
-
-    ```python
-    #%insert src/main.py
-    ```
-
-    We can try to change to python3 like so:
-
-    ```python3
-    #%insert -S "r/^/    /,r/print(.+)/print(\1)/g"
-    ```
-
-    #%insert shoutouts/*.md
-
-    #%insert common/footer.md
-
 
 See [features.md](./features.md) for details.
 
