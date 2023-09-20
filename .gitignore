@@ -1,6 +1,7 @@
 *.swp
 local_*
 
+build-release.log
 
 # Added by cargo
 
