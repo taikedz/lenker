@@ -1,6 +1,7 @@
 use std::path::Path;
 
 use super::io;
+use super::registry::Registry;
 
 struct Directive {
     command: String,
@@ -8,7 +9,7 @@ struct Directive {
     options: Vec<String>,
 }
 
-pub fn load(filename:&String) -> String {
+pub fn load(filename:&String, registry:&mut Registry) -> String {
     let lines:Vec<String>;
 
     match io::read_lines(filename) {
@@ -26,12 +27,12 @@ pub fn load(filename:&String) -> String {
         // using `map` assumes we always get a valid line resolution
         // but if we want to handle (e.g.) non-found files properly:
         // TODO use for loop, track line numbers, and print helpful error
-        .map(|line| resolve_line(line, filename))
+        .map(|line| resolve_line(line, filename, registry))
         .collect::<Vec<String>>()
         .join("\n")
 }
 
-fn resolve_line(line:&str, caller_file:&str) -> String {
+fn resolve_line(line:&str, caller_file:&str, registry:&mut Registry) -> String {
     let caller_file_p:&Path = Path::new(caller_file);
     let caller_dir:&str;
 
@@ -50,14 +51,9 @@ fn resolve_line(line:&str, caller_file:&str) -> String {
         Some(directive) => {
             match directive.command.as_str() {
                 // FIXME don't use unwrap - if line not found, print linenum and file
-                "#%insert" => { do_directive_insert(&directive, caller_dir) }
+                "#%insert" => { do_directive_insert(&directive.file_path.as_str(), caller_dir, registry) }
 
-                "#%include" => {
-                    // TODO - check this has not been included before
-                    // If not, perform insert
-                    do_directive_insert(&directive, caller_dir)
-                    // If so, do nothing
-                }
+                "#%include" => { do_directive_include(&directive.file_path.as_str(), caller_dir, registry) }
 
                 _ => {
                     // Found an invalid directive - return the line as-is
@@ -70,10 +66,22 @@ fn resolve_line(line:&str, caller_file:&str) -> String {
     }
 }
 
-fn do_directive_insert(directive:&Directive, caller_dir:&str) -> String {
-    let target:String = get_target(directive.file_path.as_str(), &vec![caller_dir]).unwrap();
-    // TODO - Register file's absolute path, load it
-    load(&target)
+
+fn do_directive_include(file_path:&str, caller_dir:&str, registry:&mut Registry) -> String {
+    let target:String = get_target(file_path, &vec![caller_dir]).unwrap();
+
+    if ! registry.contains(&target) {
+        registry.register(&target);
+        return load(&target, registry);
+    } else {
+        // Not great - inserts a blank line that wasn't there...
+        return String::from("");
+    }
+}
+
+fn do_directive_insert(file_path:&str, caller_dir:&str, registry:&mut Registry) -> String {
+    let target:String = get_target(file_path, &vec![caller_dir]).unwrap();
+    load(&target, registry)
 }
 
 fn parse_directive(line:&str) -> Option<Directive> {
@@ -95,7 +103,6 @@ fn parse_directive(line:&str) -> Option<Directive> {
 }
 
 fn get_target(path_str:&str, path_list:&Vec<&str>) -> Result<String,String> {
-
     for base_path in path_list.iter() {
         let resolved_path = vec![base_path, path_str].join("/"); // FIXME use system path sep
         if Path::new(&resolved_path).exists() {
