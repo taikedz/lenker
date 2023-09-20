@@ -2,7 +2,7 @@
 
 ## Resolution path
 
-Specified files will be resolved along paths in `INCLUSION_PATH` . If unspecified, `INCLUSION_PATH=.` is default.
+Specified files will be resolved along paths in `LENKER_PATH`, as well as the locations of the files. If unspecified, `LENKER_PATH=.` is default.
 
 This will match along each path search location until a match is found. Once a match is found, path processing ends.
 
@@ -27,29 +27,17 @@ Note that if one inclusion resolves symlinks, and the next inclusion doesn't (an
 
 ## Recursive inclusion
 
-By default, a file that is included has its content added verbatim. Use the `-R` option to resolve that file's inclusions.
+By default, a file that is included has its contents resolved as well. Use the `-R` option to prevent resolving that file's inclusions.
 
 ```
-Non-resolved
+Resolved
 #%insert content.txt
 
-Resolved
+Non-resolved
 #%insert -R content.txt
 ```
 
-Paths that start with `./` will forcibly _only_ match on the path the currently-including file was found in.
-
-```
-# top file
-#%include subdir/subfile.txt
-```
-
-```
-# subdir/subfile.txt
-#%include ./other.txt
-
-# This will search relative to subdir/subfile.txt _only_ , and ignore LENKER_PATH
-```
+Paths that contain `./` or `../` will forcibly _only_ match on the path the currently-including file was found in, ignoring the `LENKER_PATH` contents.
 
 ## Blobs and regexes
 
