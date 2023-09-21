@@ -88,9 +88,9 @@ Several other features are intended for the 1.0.0 version::
 * text/regex substitution with PCRE
 * environment variable substitution
 
-See [features.md](./features.md) for details.
+See [features.md](docs/features.md) for details.
 
 # Build
 
-See [build.md](build.md) for details on building and installing from this source repo.)
+See [build.md](docs/build.md) for details on building and installing from this source repo.)
 
