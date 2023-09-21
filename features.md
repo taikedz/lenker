@@ -129,23 +129,3 @@ You can set a variable with `#%setname` , to preserve literal percentage signs a
 #%include %MINUS_NAME% %PERCENT_NAME%
 ```
 
-## Live runner
-
-Link files to an output location to produce an output file:
-
-```sh
-lenker INPUT OUTPUT
-```
-
-Link files and execute the result:
-
-```sh
-# ARGS are passed directly to the compiled script
-lenkerx INPUT [ARGS ...]
-```
-
-As such, you can use `lenkerx` in shebang lines:
-
-```sh
-#!/usr/bin/env lenkerx
-```

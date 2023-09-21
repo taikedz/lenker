@@ -46,6 +46,28 @@ Hello !
 Bye !
 ```
 
+# `lenkerx` : nterpreter/shebang usage
+
+You can use lenkerx as a shebang target, or as a command line interpretrer:
+
+Link files and execute the result:
+
+```sh
+# ARGS are passed directly to the compiled script
+lenkerx INPUT [ARGS ...]
+```
+
+`lenkerx` in shebang lines:
+
+```sh
+#!/usr/bin/env lenkerx
+
+#%include common-files/*.sh
+
+my-function "Hello"
+
+```
+
 # Versions
 
 ## Current
