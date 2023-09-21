@@ -53,7 +53,7 @@ Currently included directives:
 * `insert`
 * `include`
 * recursive inclusion processing
-* identification of files by canoninical path
+* identification of files by canonical path
 
 # Future
 
