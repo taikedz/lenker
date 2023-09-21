@@ -1,12 +1,12 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-set -eu
+set -euo pipefail
 
 XSHELL="$1"; shift
 INPUT="$1"; shift
 OUTPUT=".x.$INPUT"
 
-lenker "$INPUT" "$OUTPUT"
+lenker "$INPUT" "$OUTPUT" | (grep -v "Wrote: $OUTPUT" || :)
 
 $XSHELL "$OUTPUT" "$@"
 RES=$?
