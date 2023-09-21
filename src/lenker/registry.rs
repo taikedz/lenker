@@ -25,7 +25,7 @@ impl Registry {
     }
 
     fn contains_abs(&self, abspath:&String) -> bool {
-        let length = self.content.iter().filter(|S| S == &abspath).collect::<Vec<&String>>().len();
+        let length = self.content.iter().filter(|s| s == &abspath).collect::<Vec<&String>>().len();
         length > 0
     }
 }

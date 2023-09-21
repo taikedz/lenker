@@ -2,6 +2,8 @@ pub mod parsing;
 mod registry;
 mod fileresolve;
 mod io;
+mod directive;
+mod loader;
 
 use registry::Registry;
 
@@ -19,9 +21,9 @@ pub fn run() {
 
     let mut registry = Registry::new();
 
-    println!("Linking '{}' into -> '{}'", args.source_file, args.dest_file);
+    eprintln!("Linking '{}' into -> '{}'", args.source_file, args.dest_file);
 
-    println!("{}", fileresolve::load(&args.source_file, &mut registry));
+    println!("{}", loader::load(&args.source_file, &mut registry));
     //let data = lenker::load(&args.source_file); // TYPE
     //lenker::write(&data);
 }
