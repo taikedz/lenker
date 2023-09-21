@@ -4,7 +4,6 @@ mod fileresolve;
 mod io;
 mod directive;
 mod loader;
-mod writer;
 
 use registry::Registry;
 
@@ -23,7 +22,7 @@ pub fn run() {
     let mut registry = Registry::new();
     let resolved_data = loader::load(&args.source_file, &mut registry);
 
-    writer::write_into(&args.dest_file, &resolved_data);
+    io::write_into(&args.dest_file, &resolved_data);
 
     println!("Wrote: {}", &args.dest_file);
 }
