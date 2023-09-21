@@ -4,6 +4,7 @@ mod fileresolve;
 mod io;
 mod directive;
 mod loader;
+mod writer;
 
 use registry::Registry;
 
@@ -19,12 +20,11 @@ pub fn run() {
         }
     }
 
-    let mut registry = Registry::new();
-
     eprintln!("Linking '{}' into -> '{}'", args.source_file, args.dest_file);
 
-    println!("{}", loader::load(&args.source_file, &mut registry));
-    //let data = lenker::load(&args.source_file); // TYPE
-    //lenker::write(&data);
+    let mut registry = Registry::new();
+    let resolved_data = loader::load(&args.source_file, &mut registry);
+
+    writer::write_into(&args.dest_file, &resolved_data);
 }
 
