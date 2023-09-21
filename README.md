@@ -54,13 +54,14 @@ Link files and execute the result:
 
 ```sh
 # ARGS are passed directly to the compiled script
-lenkerx INPUT [ARGS ...]
+# lenkerx SHELL INPUT [ARGS ...]
+lenkerx bash my-file.sh --some --args
 ```
 
-`lenkerx` in shebang lines:
+`lenkerx` in shebang lines - not the first lenker compilation:
 
 ```sh
-#!/usr/bin/env lenkerx
+#!/usr/bin/env lenkerx bash
 
 #%include common-files/*.sh
 

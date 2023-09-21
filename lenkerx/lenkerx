@@ -2,17 +2,16 @@
 
 set -eu
 
+XSHELL="$1"; shift
 INPUT="$1"; shift
 OUTPUT=".x.$INPUT"
 
 lenker "$INPUT" "$OUTPUT"
 
-chmod 755 "$OUTPUT"
-
-./"$OUTPUT" "$@"
+$XSHELL "$OUTPUT" "$@"
 RES=$?
 
 rm "$OUTPUT"
 
-exit %RES
+exit $RES
 
