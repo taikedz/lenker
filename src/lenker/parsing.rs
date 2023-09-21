@@ -1,4 +1,5 @@
 use std::env;
+use crate::version::VERSION;
 
 
 pub struct BasicArguments {
@@ -14,7 +15,7 @@ pub fn get_targets() -> Result<BasicArguments, String> {
     if arg_list.len() < 3 {
         // We can omit ';', thus `Err()` instead of `return Err();`
         // but it doesn't sit well with me no not obviate the return...
-        return Err(format!("Usage:\n\t{} SOURCE_FILE DEST_FILE", &arg_list[0]))
+        return Err(format!("Lenker {}\n\nUsage:\n\t{} SOURCE_FILE DEST_FILE", VERSION, &arg_list[0]))
 
     } else {
         args = BasicArguments {

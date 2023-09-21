@@ -1,7 +1,10 @@
 [package]
-name = "lenker"
-version = "0.1.0"
+# Edition of manifest
 edition = "2021"
+
+name = "lenker"
+# !! ALSO UPDATE src/version.rs FILE !!
+version = "0.1.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
