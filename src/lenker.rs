@@ -20,11 +20,11 @@ pub fn run() {
         }
     }
 
-    eprintln!("Linking '{}' into -> '{}'", args.source_file, args.dest_file);
-
     let mut registry = Registry::new();
     let resolved_data = loader::load(&args.source_file, &mut registry);
 
     writer::write_into(&args.dest_file, &resolved_data);
+
+    println!("Wrote: {}", &args.dest_file);
 }
 
