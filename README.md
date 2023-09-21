@@ -46,7 +46,9 @@ Hello !
 Bye !
 ```
 
-# Current
+# Versions
+
+## Current
 
 Currently included directives:
 
@@ -55,7 +57,7 @@ Currently included directives:
 * recursive inclusion processing
 * identification of files by canonical path
 
-# Future
+## Future
 
 Several other features are intended for the 1.0.0 version::
 
@@ -64,4 +66,8 @@ Several other features are intended for the 1.0.0 version::
 * environment variable substitution
 
 See [features.md](./features.md) for details.
+
+# Build
+
+See [build.md](build.md) for details on building and installing from this source repo.)
 
