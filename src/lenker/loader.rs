@@ -33,7 +33,6 @@ fn resolve_line(line:&str, caller_file:&str, registry:&mut Registry) -> String {
         None => String::from(line),
         Some(direc) => {
             match direc.command.as_str() {
-                // FIXME don't use unwrap - if line not found, print linenum and file
                 "#%insert" => { do_directive_insert(&direc.file_path.as_str(), caller_dir, registry) }
 
                 "#%include" => { do_directive_include(&direc.file_path.as_str(), caller_dir, registry) }
@@ -63,7 +62,13 @@ fn do_directive_include(file_path:&str, caller_dir:&str, registry:&mut Registry)
 }
 
 fn do_directive_insert(file_path:&str, caller_dir:&str, registry:&mut Registry) -> String {
-    let target:String = fileresolve::get_target(file_path, &vec![caller_dir]).unwrap();
-    load(&target, registry)
+    // FIXME - need to print calling _file_ and line number, ideally
+    match fileresolve::get_target(file_path, &vec![caller_dir]) {
+        Ok(target) => load(&target, registry),
+        Err(e) => {
+            eprintln!("ERROR: Could not open '{}' : {}", file_path, e);
+            std::process::exit(100);
+        }
+    }
 }
 

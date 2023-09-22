@@ -14,7 +14,10 @@ pub fn parse_directive(line:&str) -> Option<Directive> {
         None => None,
 
         Some(command) => {
-            let path:String = tokens.collect::<Vec<&str>>().join(" ");
+            let path:String = tokens
+                .filter(|s| !s.is_empty())
+                .collect::<Vec<&str>>()
+                .join(" ");
             let options:Vec<String> = vec![];
 
             Some(Directive { command: String::from(command), file_path: path, options: options })
