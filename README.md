@@ -47,7 +47,7 @@ Hello !
 Bye !
 ```
 
-# `lenkerx` : nterpreter/shebang usage
+# `lenkerx` : Interpreter/shebang usage
 
 You can use lenkerx as a shebang target, or as a command line interpretrer:
 
