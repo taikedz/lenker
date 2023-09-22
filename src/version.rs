@@ -1,2 +1,2 @@
 // !! ALSO UPDATE "Cargo.toml" FILE !!
-pub const VERSION:&str = "0.1.1";
+pub const VERSION:&str = "0.2.0";

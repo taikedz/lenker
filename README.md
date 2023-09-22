@@ -1,8 +1,10 @@
 # Lenker
 
-A general-purpose text-file linker. Can be used as a pre-processing step.
+A general-purpose text-file linker, that can link from shared resource directories. Can be used as a pre-processing step.
 
-Write files, use `#%include PATH` (resolve once) or `#%insert PATH` (resolve every time) to add the file's content into that location.
+Write files, use `#%include FILEPATH` (resolve and add contents once) or `#%insert PATH` (add contents every time) to add the file's content into that location.
+
+Resolve files from shared folders specified in `LENKER_PATH` - re-use snippets stored in a common library location, and make content re-use standard practice!
 
 Useful for combining multiple files into a single file - some use-case examples:
 
@@ -12,8 +14,7 @@ Useful for combining multiple files into a single file - some use-case examples:
 
 Anywhere you want to combine files pre-runtime which don't have the in-language feature to do so, this tool is your friend.
 
-The options system allows doing much more than basic concatenation. Make content re-use standard!
-
+Anywhere you want to combine files from a shared source, this tool will help you.
 
 ## include vs insert
 
@@ -79,6 +80,7 @@ Currently included directives:
 * `include`
 * recursive inclusion processing
 * identification of files by canonical path
+* resolve file paths from `LENKER_PATH`
 
 ## Future
 
