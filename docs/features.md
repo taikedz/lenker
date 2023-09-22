@@ -129,3 +129,38 @@ You can set a variable with `#%setname` , to preserve literal percentage signs a
 #%include %MINUS_NAME% %PERCENT_NAME%
 ```
 
+# User extenstions
+
+An extended capability that might appear: custom user extensions written in an embdded scripting language. Maybe [RustPython](https://github.com/RustPython/RustPython), but the language selection is still open. I'm pretty keen on combining python and rust though, so...
+
+The processor would be able to call user-defined scriptlets written in Rhai
+
+```python
+
+def handle_line(line:str) -> list[str]:
+    # receive and check/process a line,
+    # return an array (rust vector) of lines to the engine
+
+
+def handle_file(file_name:str, lines:list[str]) -> list[str]:
+    # inspect lines, remove/insert/transform,
+    # and return the adjusted lines as a Vec<String>
+
+
+# The lenker object is provided into rust
+lenker.register_line_handler(handle_line)
+lenker.register_file_handler(handle_file)
+```
+
+This allows custom defined behaviours to be called either on a per-line basis or as a custom line pre-processor.
+
+The source document then declares the modules to activate in Lenker, for example for improved script pre-processing:
+
+```sh
+# Enable the per-line handler in a module `bash-function-sigs`
+#%lenker-ext bash-function-sigs : line
+
+# Or, activate both
+#%lenker-ext bash-function-sigs : line,file
+```
+

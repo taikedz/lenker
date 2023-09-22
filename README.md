@@ -59,7 +59,7 @@ Link files and execute the result:
 lenkerx bash my-file.sh --some --args
 ```
 
-`lenkerx` in shebang lines - not the first lenker compilation:
+`lenkerx` in shebang lines:
 
 ```sh
 #!/usr/bin/env lenkerx bash
@@ -88,7 +88,7 @@ Several other features are intended for the 1.0.0 version::
 
 * file blob inclusion, folder inclusion
 * text/regex substitution with PCRE
-* environment variable substitution
+* in-line variable substitution
 
 See [features.md](docs/features.md) for details.
 
