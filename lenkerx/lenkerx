@@ -4,14 +4,11 @@ set -euo pipefail
 
 XSHELL="$1"; shift
 INPUT="$1"; shift
-OUTPUT=".x.$INPUT"
+OUTPUT="$(mktemp ".$(basename "$INPUT")-XXXX")"
+cleanup() { rm "$OUTPUT"; }
 
 lenker "$INPUT" "$OUTPUT" | (grep -v "Wrote: $OUTPUT" || :)
+trap cleanup EXIT
 
 $XSHELL "$OUTPUT" "$@"
-RES=$?
-
-rm "$OUTPUT"
-
-exit $RES
 
