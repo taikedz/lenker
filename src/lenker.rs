@@ -1,4 +1,5 @@
 pub mod parsing;
+mod lenkerpath;
 mod registry;
 mod fileresolve;
 mod io;

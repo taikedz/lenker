@@ -29,8 +29,12 @@ pub fn parent_of(caller_file:&str) -> &str {
 }
 
 pub fn get_target(path_str:&str, path_list:&Vec<&str>) -> Result<String,String> {
+    // Get LENKER_PATH contents here (?), and combine with path_list
+    let local_paths = vec![base_path, path_str];
+    let all_paths = lenkerpath.get_paths_with(&local_paths);
+
     for base_path in path_list.iter() {
-        let resolved_path = vec![base_path, path_str].join("/"); // FIXME use system path sep
+        let resolved_path = all_paths.join("/"); // FIXME use system path sep
         if Path::new(&resolved_path).exists() {
             return Ok(String::from(&resolved_path));
         }
