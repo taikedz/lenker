@@ -133,7 +133,7 @@ You can set a variable with `#%setname` , to preserve literal percentage signs a
 
 An extended capability that might appear: custom user extensions written in an embdded scripting language. Maybe [RustPython](https://github.com/RustPython/RustPython), but the language selection is still open. I'm pretty keen on combining python and rust though, so...
 
-The processor would be able to call user-defined scriptlets written in Rhai
+The processor would be able to call user-defined scriptlets:
 
 ```python
 
