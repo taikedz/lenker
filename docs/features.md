@@ -5,7 +5,7 @@
 ## Example content
 
 
-Example of a Mardkown file generted with code snippets, and using some string substitution:
+Example of a Mardkown file generated with code snippets, and using some string substitution:
 
 
     # My Little Utility
@@ -35,6 +35,8 @@ Specified files will be resolved along paths in `LENKER_PATH`, as well as the lo
 
 This will match along each path search location until a match is found. Once a match is found, path processing ends.
 
+Status: implemented.
+
 ## Matching files
 
 Every file encountered is "remembered" with its _canonical_ path.
@@ -50,6 +52,15 @@ The canonical path is retained where the file is found. This also resolves symli
 
 Note that if the files are identical hardlinks, they will register as differnt files.
 
+Status: implemented.
+
+
+## Specific inclusion
+
+Paths that contain `./` or `../` will forcibly _only_ match on the path the currently-including file was found in, ignoring the `LENKER_PATH` contents.
+
+Status: todo
+
 ## Recursive inclusion
 
 By default, a file that is included has its contents resolved as well. Use the `-R` option to prevent resolving that file's inclusions.
@@ -62,7 +73,7 @@ Non-resolved
 #%insert -R content.txt
 ```
 
-Paths that contain `./` or `../` will forcibly _only_ match on the path the currently-including file was found in, ignoring the `LENKER_PATH` contents.
+Status: todo
 
 ## Blobs and regexes
 
@@ -89,6 +100,8 @@ To include only files that do not match, use `-x` option - the following include
 #%include -x *.txt
 ```
 
+Status: todo
+
 ## Folder inclusions
 
 If a folder is specified instead of a file, the direct files of the folder are included, following same ordering rules as above. Child folders and hidden files (starting with `.`) are skipped (no folder recursion).
@@ -113,6 +126,8 @@ Use alternative separator - set the single character separator freely:
 #%include -S s|http://|https://|g file.txt
 ```
 
+Status: todo
+
 ## Environment Variables
 
 Use environment variables anywhere in the inclusion string by using `%NAME%`:
@@ -128,6 +143,8 @@ You can set a variable with `#%setname` , to preserve literal percentage signs a
 #%setname MINUS_NAME -hyphenated.txt
 #%include %MINUS_NAME% %PERCENT_NAME%
 ```
+
+Status: todo
 
 # User extenstions
 
