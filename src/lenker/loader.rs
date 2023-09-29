@@ -27,15 +27,13 @@ pub fn load(filename:&String, registry:&mut Registry) -> String {
 }
 
 fn resolve_line(line:&str, caller_file:&str, registry:&mut Registry) -> String {
-    let caller_dir:&str = fileresolve::parent_of(caller_file);
-
     match directive::parse_directive(line) {
         None => String::from(line),
         Some(direc) => {
             match direc.command.as_str() {
-                "#%insert" => { do_directive_insert(&direc.file_path.as_str(), caller_dir, registry) }
+                "#%insert" => { do_directive_insert(&direc.file_path.as_str(), caller_file, registry) }
 
-                "#%include" => { do_directive_include(&direc.file_path.as_str(), caller_dir, registry) }
+                "#%include" => { do_directive_include(&direc.file_path.as_str(), caller_file, registry) }
 
                 _ => {
                     // Found an invalid directive - return the line as-is
@@ -49,8 +47,11 @@ fn resolve_line(line:&str, caller_file:&str, registry:&mut Registry) -> String {
 }
 
 
-fn do_directive_include(file_path:&str, caller_dir:&str, registry:&mut Registry) -> String {
-    let target:String = fileresolve::get_target(file_path, &vec![caller_dir]).unwrap();
+fn do_directive_include(file_path:&str, caller_file:&str, registry:&mut Registry) -> String {
+    let caller_dir:&str = fileresolve::parent_of(caller_file);
+
+    let target:String = fileresolve::get_target(file_path, &vec![caller_dir])
+        .expect(format!("ERROR: Could not find '{}' (needed by '{}')", file_path, caller_file).as_str());
 
     if ! registry.contains(&target) {
         registry.register(&target);
@@ -61,12 +62,14 @@ fn do_directive_include(file_path:&str, caller_dir:&str, registry:&mut Registry)
     }
 }
 
-fn do_directive_insert(file_path:&str, caller_dir:&str, registry:&mut Registry) -> String {
+fn do_directive_insert(file_path:&str, caller_file:&str, registry:&mut Registry) -> String {
+    let caller_dir:&str = fileresolve::parent_of(caller_file);
+
     // FIXME - need to print calling _file_ and line number, ideally
     match fileresolve::get_target(file_path, &vec![caller_dir]) {
         Ok(target) => load(&target, registry),
         Err(e) => {
-            eprintln!("ERROR: Could not open '{}' : {}", file_path, e);
+            eprintln!("ERROR: Could not open '{}' (needed by '{}') : {}", file_path, caller_file, e);
             std::process::exit(100);
         }
     }

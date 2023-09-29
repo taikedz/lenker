@@ -29,9 +29,21 @@ pub fn parent_of(caller_file:&str) -> &str {
     }
 }
 
+
+fn is_explicit_path(path_str:&str) -> bool {
+    path_str.starts_with("/") || path_str.starts_with("./") || path_str.starts_with("../")
+}
+
+
 pub fn get_target(path_str:&str, path_list:&Vec<&str>) -> Result<String,String> {
-    // Get LENKER_PATH contents here (?), and combine with path_list
     let all_paths = lenkerpath::get_paths_with(&path_list);
+
+    if is_explicit_path(path_str) {
+        match Path::new(path_str).exists() {
+            true => return Ok(String::from(path_str)),
+            false => return Err(format!("Local path '{}' could not be resolved", path_str)),
+        }
+    }
 
     for base_path in all_paths.iter() {
         let resolved_path = vec![base_path.as_str(), path_str].join("/"); // FIXME use system path sep

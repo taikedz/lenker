@@ -59,7 +59,7 @@ Status: implemented.
 
 Paths that contain `./` or `../` will forcibly _only_ match on the path the currently-including file was found in, ignoring the `LENKER_PATH` contents.
 
-Status: todo
+Status: implemented
 
 ## Recursive inclusion
 
