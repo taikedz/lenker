@@ -70,6 +70,8 @@ my-function "Hello"
 
 ```
 
+See the source for [lenkerx](lenkerx/) for an example of a shell script written with lenker macros.
+
 # Versions
 
 ## Current
