@@ -61,6 +61,17 @@ Paths that contain `./` or `../` will forcibly _only_ match on the path the curr
 
 Status: implemented
 
+## Folder separator conversion
+
+Paths are resolved using the platforms's folder separator: `/` on nix systems, `\\` on Windows systems.
+
+The following would both work in the same file:
+
+```
+#%include folder\file1.txt
+#%include folder/file2.txt
+```
+
 ## Recursive inclusion
 
 By default, a file that is included has its contents resolved as well. Use the `-R` option to prevent resolving that file's inclusions.
