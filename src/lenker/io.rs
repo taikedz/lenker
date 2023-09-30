@@ -22,8 +22,8 @@ pub fn read_lines(path_str: &str) -> Result<Vec<String>,String> {
                 Err(format!("Could not open '{}' : {}", path_str, e))
             }
             Ok(data) => {
-                Ok(data.lines()            // split the string into an iterator of string slices
-                    .map(String::from)  // make each slice into an owned string
+                Ok(data.lines()         // split the string into an iterator of string slices
+                    .map(String::from)  // short-notation, make each slice into an owned string
                     .collect()          // gather them together into a vector
                 )
             }

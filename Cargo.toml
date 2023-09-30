@@ -5,7 +5,7 @@ edition = "2021"
 name = "lenker"
 # !! ALSO UPDATE src/version.rs FILE !!
 # And run a build with the new version (it updates Cargo.lock)
-version = "0.2.2"
+version = "0.2.3"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

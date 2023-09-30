@@ -56,7 +56,8 @@ fn do_directive_include(file_path:&str, caller_file:&str, registry:&mut Registry
                 registry.register(&target);
                 return load(&target, registry);
             } else {
-                // Not great - inserts a blank line that wasn't there...
+                // Note - inserts a blank line where a directive yields nothing
+                // In all cases I can think of, this should actually be fine?
                 return String::from("");
             }
         },
@@ -72,7 +73,12 @@ fn do_directive_insert(file_path:&str, caller_file:&str, registry:&mut Registry)
 
     // FIXME - need to print calling _file_ and line number, ideally
     match fileresolve::get_target(file_path, &vec![caller_dir]) {
-        Ok(target) => load(&target, registry),
+        Ok(target) => {
+            if ! registry.contains(&target) {
+                registry.register(&target);
+            }
+            load(&target, registry)
+        },
         Err(e) => {
             eprintln!("ERROR: #%insert in {} : {}", caller_file, e);
             std::process::exit(100); // FIXME:errcode

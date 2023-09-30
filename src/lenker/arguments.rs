@@ -13,7 +13,7 @@ pub fn get_linker_targets() -> Result<BasicArguments, String> {
     let args:BasicArguments;
 
     match arg_list.len() == 3 {
-        false => Err(format!("Lenker {}\n\nUsage:\n\t{} SOURCE_FILE DEST_FILE", VERSION, &arg_list[0]))
+        false => Err(format!("Lenker {}\n\nUsage:\n\t{} SOURCE_FILE DEST_FILE", VERSION, &arg_list[0])),
 
         true => {
             args = BasicArguments {
