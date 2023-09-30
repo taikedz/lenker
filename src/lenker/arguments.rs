@@ -12,16 +12,15 @@ pub fn get_linker_targets() -> Result<BasicArguments, String> {
     let arg_list:Vec<String> = env::args().collect();
     let args:BasicArguments;
 
-    if arg_list.len() < 3 {
-        // We can omit ';', thus `Err()` instead of `return Err();`
-        // but it doesn't sit well with me no not obviate the return...
-        return Err(format!("Lenker {}\n\nUsage:\n\t{} SOURCE_FILE DEST_FILE", VERSION, &arg_list[0]))
+    match arg_list.len() == 3 {
+        false => Err(format!("Lenker {}\n\nUsage:\n\t{} SOURCE_FILE DEST_FILE", VERSION, &arg_list[0]))
 
-    } else {
-        args = BasicArguments {
-            source_file: String::from(&arg_list[1]),
-            dest_file: String::from(&arg_list[2]),
-        };
-        return Ok(args)
+        true => {
+            args = BasicArguments {
+                source_file: String::from(&arg_list[1]),
+                dest_file: String::from(&arg_list[2]),
+            };
+            Ok(args)
+        }
     }
 }
