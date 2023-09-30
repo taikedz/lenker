@@ -50,15 +50,20 @@ fn resolve_line(line:&str, caller_file:&str, registry:&mut Registry) -> String {
 fn do_directive_include(file_path:&str, caller_file:&str, registry:&mut Registry) -> String {
     let caller_dir:&str = fileresolve::parent_of(caller_file);
 
-    let target:String = fileresolve::get_target(file_path, &vec![caller_dir])
-        .expect(format!("ERROR: Could not find '{}' (needed by '{}')", file_path, caller_file).as_str());
-
-    if ! registry.contains(&target) {
-        registry.register(&target);
-        return load(&target, registry);
-    } else {
-        // Not great - inserts a blank line that wasn't there...
-        return String::from("");
+    match fileresolve::get_target(file_path, &vec![caller_dir]) {
+        Ok(target) => {
+            if ! registry.contains(&target) {
+                registry.register(&target);
+                return load(&target, registry);
+            } else {
+                // Not great - inserts a blank line that wasn't there...
+                return String::from("");
+            }
+        },
+        Err(e) => {
+            eprintln!("ERROR: #%include in {} : {}", caller_file, e);
+            std::process::exit(100); // FIXME:errcode
+        }
     }
 }
 
@@ -69,8 +74,8 @@ fn do_directive_insert(file_path:&str, caller_file:&str, registry:&mut Registry)
     match fileresolve::get_target(file_path, &vec![caller_dir]) {
         Ok(target) => load(&target, registry),
         Err(e) => {
-            eprintln!("ERROR: Could not open '{}' (needed by '{}') : {}", file_path, caller_file, e);
-            std::process::exit(100);
+            eprintln!("ERROR: #%insert in {} : {}", caller_file, e);
+            std::process::exit(100); // FIXME:errcode
         }
     }
 }
