@@ -8,7 +8,7 @@ pub struct BasicArguments {
 }
 
 
-pub fn get_targets() -> Result<BasicArguments, String> {
+pub fn get_linker_targets() -> Result<BasicArguments, String> {
     let arg_list:Vec<String> = env::args().collect();
     let args:BasicArguments;
 

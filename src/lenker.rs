@@ -1,4 +1,4 @@
-pub mod parsing;
+mod arguments;
 mod lenkerpath;
 mod registry;
 mod fileresolve;
@@ -10,9 +10,9 @@ use registry::Registry;
 
 pub fn run() {
     // load arguments - main file, dest file
-    let args:parsing::BasicArguments;
+    let args: arguments::BasicArguments;
 
-    match parsing::get_targets() {
+    match arguments::get_linker_targets() {
         Ok(res) => args = res,
         Err(e) => {
             eprintln!("{}", e);
