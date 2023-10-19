@@ -27,21 +27,21 @@ pub fn load(filename:&String, registry:&mut Registry) -> String {
 }
 
 fn resolve_line(line:&str, caller_file:&str, registry:&mut Registry) -> String {
-    match directive::parse_directive(line) {
-        None => String::from(line),
-        Some(direc) => {
-            match direc.command.as_str() {
-                "#%insert" => { do_directive_insert(&direc.file_path.as_str(), caller_file, registry) }
+    let res = directive::parse_directive(line);
 
-                "#%include" => { do_directive_include(&direc.file_path.as_str(), caller_file, registry) }
+    if res.is_none() { return String::from(line); }
 
-                _ => {
-                    // Found an invalid directive - return the line as-is
-                    //   this may still have been deliberate
-                    eprintln!("WARN: {}: unresolvable directive '{}'", caller_file, direc.command);
-                    String::from(line)
-                }
-            }
+    let direc = res.unwrap();
+    match direc.command.as_str() {
+        "#%insert" => { do_directive_insert(&direc.file_path.as_str(), caller_file, registry) }
+
+        "#%include" => { do_directive_include(&direc.file_path.as_str(), caller_file, registry) }
+
+        _ => {
+            // Found an invalid directive - return the line as-is
+            //   this may still have been deliberate
+            eprintln!("WARN: {}: unresolvable directive '{}'", caller_file, direc.command);
+            String::from(line)
         }
     }
 }
